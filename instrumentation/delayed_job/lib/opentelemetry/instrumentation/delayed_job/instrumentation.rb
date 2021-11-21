@@ -9,8 +9,7 @@ module OpenTelemetry
     module DelayedJob
       # Instrumentation class that detects and installs the DelayedJob instrumentation
       class Instrumentation < OpenTelemetry::Instrumentation::Base
-        MINIMUM_VERSION = Gem::Version.new('4.1')
-
+        library_name 'deplayed_job'
         install do |_config|
           require_dependencies
           register_tracer_plugin
@@ -20,15 +19,7 @@ module OpenTelemetry
           !defined?(::Delayed).nil?
         end
 
-        compatible do
-          gem_version >= MINIMUM_VERSION
-        end
-
         private
-
-        def gem_version
-          Gem.loaded_specs['delayed_job'].version
-        end
 
         def require_dependencies
           require_relative 'plugins/tracer_plugin'
