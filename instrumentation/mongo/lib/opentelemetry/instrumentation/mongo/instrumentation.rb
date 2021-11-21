@@ -9,8 +9,7 @@ module OpenTelemetry
     module Mongo
       # Instrumentation class that detects and installs the Mongo instrumentation
       class Instrumentation < OpenTelemetry::Instrumentation::Base
-        MINIMUM_VERSION = Gem::Version.new('2.5.0')
-
+        library_name 'mongo'
         install do |_config|
           require_dependencies
           register_subscriber
@@ -20,18 +19,10 @@ module OpenTelemetry
           !defined?(::Mongo::Monitoring::Global).nil?
         end
 
-        compatible do
-          gem_version >= MINIMUM_VERSION
-        end
-
         option :peer_service, default: nil, validate: :string
         option :db_statement, default: :include, validate: ->(opt) { %I[omit include].include?(opt) }
 
         private
-
-        def gem_version
-          Gem.loaded_specs['mongo']&.version
-        end
 
         def require_dependencies
           require_relative 'subscriber'
